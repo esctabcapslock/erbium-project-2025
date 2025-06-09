@@ -6,11 +6,11 @@ import { useGameStore } from '@/store/gameStore';
 import {TEAM_NAME} from '@/lib/data'
  
 const HomePage: React.FC = () => {
-  const { resetGame, setGameStartedFromTitle, startGameTimer } = useGameStore();
+  const { resetGame, startGameTimer } = useGameStore();
 
   const handleStartGame = () => {
     resetGame();
-    setGameStartedFromTitle(true);
+    // setGameStartedFromTitle(true);
     startGameTimer();
   };
 
@@ -18,7 +18,7 @@ const HomePage: React.FC = () => {
     <div className="relative w-full max-w-2xl p-8 bg-white rounded-lg shadow-lg text-center z-10 border border-gray-200 animate-fade-in">
       {/* 게임 타이틀 */}
       <h1 className="text-5xl md:text-6xl font-bold text-gray-800 mb-6 leading-tight">
-          에르븀 프로젝트
+          에르븀 프로젝트 - 2025
       </h1>
 
       {/* 게임 설명 */}
@@ -28,7 +28,7 @@ const HomePage: React.FC = () => {
       </p>
 
       {/* 게임 시작 버튼 */}
-      <Link href="/game" passHref>
+      <Link href="/prologue" passHref>
         <button
           onClick={handleStartGame}
           className="btn-retro-primary text-xl px-10 py-4 font-semibold animate-pulse-once" // btn-primary 대신 btn-retro-primary 적용

@@ -4,7 +4,6 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useGameStore } from '@/store/gameStore';
-import { stages } from '@/lib/constants';
 import { TEAM_NAME } from '@/lib/data';
 
 const EndingPage: React.FC = () => {
@@ -39,7 +38,8 @@ const EndingPage: React.FC = () => {
           게임 클리어! 🎉
         </h1>
         <p className="text-xl md:text-2xl text-gray-700 mb-4">
-        세계에 평화를 되찾았습니다!
+        끝내 숫자를 복구하는 데 성공했다! <br />
+        컴퓨터 세계의 평화를 지키는 데 성공했다.
         </p>
 
         <div className="my-8 space-y-3">

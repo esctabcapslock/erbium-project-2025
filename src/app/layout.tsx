@@ -6,7 +6,7 @@ import "@/styles/globals.css"; // 전역 CSS
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "68 빌런과 숫자 세상의 위기",
+  title: "에르붐 프로젝트",
   description: "숫자 퍼즐 웹 게임",
 };
 

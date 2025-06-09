@@ -9,7 +9,6 @@ import { evaluateExpression, isValidExpression, buildExpressionString } from '@/
 import Inventory from '@/components/Inventory';
 import Card from '@/components/Card';
 import Link from 'next/link';
-import PrologueOverlay from '@/components/PrologueOverlay';
 import { useRouter } from 'next/navigation';
 
 // 스테이지 클리어 팝업
@@ -67,8 +66,6 @@ const GamePage: React.FC = () => {
     resetGame,
     currentStageStartTime,
     setCurrentStageStartTime,
-    isGameStartedFromTitle,
-    setGameStartedFromTitle,
     addTimeToTotal,
   } = useGameStore();
 
@@ -83,10 +80,8 @@ const GamePage: React.FC = () => {
 
   useEffect(() => {
     setCurrentStageStartTime(Date.now());
-    if (isGameStartedFromTitle) {
-      setGameStartedFromTitle(false);
-    }
-  }, [currentStageIndex, setCurrentStageStartTime, isGameStartedFromTitle, setGameStartedFromTitle]);
+
+  }, [currentStageIndex, setCurrentStageStartTime]);
 
 
   const showTemporaryTooltip = (message: string, type: 'success' | 'error' = 'error') => {
@@ -101,9 +96,9 @@ const GamePage: React.FC = () => {
   };
 
 
-  const handleDismissPrologue = () => {
-    setGameStartedFromTitle(false);
-  };
+  // const handleDismissPrologue = () => {
+  //   setGameStartedFromTitle(false);
+  // };
 
   const handleGoToMainMenu = () => {
     if (confirm('게임을 포기하고 메인 메뉴로 돌아가시겠습니까? 현재 진행 상황은 초기화됩니다.')) {
@@ -161,8 +156,12 @@ const GamePage: React.FC = () => {
     let result: number | null = null;
     try {
       result = evaluateExpression(currentExpression);
-    } catch (e: any) {
-      showTemporaryTooltip(`계산 오류: ${e.message}`);
+    } catch (e: unknown) {
+      if (e instanceof Error) {
+        showTemporaryTooltip(`계산 오류: ${e.message}`);
+      }else{
+        showTemporaryTooltip(`계산 오류: ${e}`);
+      }
       return;
     }
 
@@ -197,10 +196,11 @@ const GamePage: React.FC = () => {
   };
 
   const handleConfirmNextStage = () => {
+    console.log('--handleConfirmNextStage-- ', currentStageIndex, stages)
     setShowCompletionPopup(false);
     resetExpression();
     if (currentStageIndex === stages.length - 1) {
-      router.push('/game'); // 모든 스테이지 완료 시 게임 종료 화면으로
+      router.push('/ending'); // 모든 스테이지 완료 시 게임 종료 화면으로
     } else {
       nextStage();
       setCurrentStageStartTime(Date.now());
@@ -209,7 +209,6 @@ const GamePage: React.FC = () => {
 
   return (
     <div className="container mx-auto p-4 md:p-8 relative max-w-4xl">
-      {isGameStartedFromTitle && <PrologueOverlay onDismiss={handleDismissPrologue} />}
 
       {showCompletionPopup && (
         <CompletionPopup

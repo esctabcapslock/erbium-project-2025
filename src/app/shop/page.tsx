@@ -21,7 +21,6 @@ const ShopMessagePopup: React.FC<ShopMessagePopupProps> = ({
   duration = 3000,
 }) => {
   const textColor = type === 'success' ? 'text-green-600' : 'text-red-600'; // Colors similar to your 'Stage Clear!' text
-  const borderColor = type === 'success' ? 'border-green-300' : 'border-red-300'; // Lighter border for consistency
 
   useEffect(() => {
     if (duration > 0) {

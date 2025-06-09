@@ -1,8 +1,9 @@
 // src/store/gameStore.ts
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
-import { CardType, Card, Stage } from '@/lib/types';
-import { stages, ALL_SHOP_CARDS, INITIAL_INVENTORY_CARDS } from '@/lib/constants';
+import { Card } from '@/lib/types';
+import { ALL_SHOP_CARDS, INITIAL_INVENTORY_CARDS } from '@/lib/constants';
+import { START_POINT } from '@/lib/data';
 
 interface GameState {
   points: number;
@@ -13,7 +14,6 @@ interface GameState {
   currentStageStartTime: number; // 현재 스테이지 시작 시간
   gameStartTime: number; // 게임 전체 시작 시간 (새로 추가)
   totalTimePlayed: number; // 총 플레이 시간 (밀리초) (새로 추가)
-  isGameStartedFromTitle: boolean;
 }
 
 interface GameActions {
@@ -25,7 +25,6 @@ interface GameActions {
   nextStage: () => void;
   resetGame: () => void;
   setCurrentStageStartTime: (time: number) => void;
-  setGameStartedFromTitle: (started: boolean) => void;
   startGameTimer: () => void; // 게임 전체 타이머 시작
   addTimeToTotal: (timeToAdd: number) => void; // 총 플레이 시간에 시간 누적
 }
@@ -41,7 +40,7 @@ const initializeCardsWithUniqueIds = (cards: Card[]): Card[] => {
 export const useGameStore = create<GameState & GameActions>()(
   persist(
     (set, get) => ({
-      points: 100,
+      points: START_POINT,
       inventory: initializeCardsWithUniqueIds(INITIAL_INVENTORY_CARDS),
       shopCards: initializeCardsWithUniqueIds(ALL_SHOP_CARDS),
       currentStageIndex: 0,
@@ -49,7 +48,6 @@ export const useGameStore = create<GameState & GameActions>()(
       currentStageStartTime: Date.now(), // 초기 스테이지 시작 시간
       gameStartTime: Date.now(), // 게임 시작 시간 초기화
       totalTimePlayed: 0, // 총 플레이 시간 초기화
-      isGameStartedFromTitle: false,
 
       addPoints: (amount) => set((state) => ({ points: state.points + amount })),
 
@@ -111,7 +109,7 @@ export const useGameStore = create<GameState & GameActions>()(
       nextStage: () => set((state) => ({ currentStageIndex: state.currentStageIndex + 1 })),
 
       resetGame: () => set({
-        points: 100,
+        points: START_POINT,
         inventory: initializeCardsWithUniqueIds(INITIAL_INVENTORY_CARDS),
         shopCards: initializeCardsWithUniqueIds(ALL_SHOP_CARDS),
         currentStageIndex: 0,
@@ -119,11 +117,9 @@ export const useGameStore = create<GameState & GameActions>()(
         currentStageStartTime: Date.now(),
         gameStartTime: Date.now(), // 게임 초기화 시 게임 시작 시간도 리셋
         totalTimePlayed: 0, // 게임 초기화 시 총 플레이 시간도 리셋
-        isGameStartedFromTitle: false,
       }),
 
       setCurrentStageStartTime: (time: number) => set({ currentStageStartTime: time }),
-      setGameStartedFromTitle: (started: boolean) => set({ isGameStartedFromTitle: started }),
 
       startGameTimer: () => set({ gameStartTime: Date.now() }), // 게임 시작 시 호출될 액션
       addTimeToTotal: (timeToAdd: number) => set((state) => ({ totalTimePlayed: state.totalTimePlayed + timeToAdd })), // 총 시간에 누적

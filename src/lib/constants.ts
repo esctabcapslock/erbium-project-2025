@@ -59,35 +59,35 @@ export const stages: Stage[] = [
     rewardPoints: 10,
   },
   {
-    id: 'stage_4',
+    id: 'stage_5',
     targetNumber: 1, // 6/6
     description: "간단한 문제 4",
     cardLimit: 3,
     rewardPoints: 20,
   },
   {
-    id: 'stage_5',
+    id: 'stage_6',
     targetNumber: 36, // 6^2
     description: "간단한 문제 5",
     cardLimit: 3,
     rewardPoints: 20,
   },
   {
-    id: 'stage_6',
+    id: 'stage_7',
     targetNumber: 3, // 8-6+6/6
     description: "간단한 문제 6",
     cardLimit: 7,
     rewardPoints: 20,
   },
   {
-    id: 'stage_7',
+    id: 'stage_8',
     targetNumber: 720, // 7!
     description: "간단한 문제 7",
     cardLimit: 2,
     rewardPoints: 20,
   },
   {
-    id: 'stage_8',
+    id: 'stage_9',
     targetNumber: 68,
     description: "최종",
     cardLimit: 11,

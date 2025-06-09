@@ -150,8 +150,7 @@ export const evaluateRPN = (rpnExpression: Card[]): number => {
  * 단항 연산자는 해당 숫자에 적절히 붙도록 개선합니다.
  */
 export const buildExpressionString = (cards: Card[]): string => {
-  let expressionTokens: string[] = [];
-  let prevCard: Card | null = null;
+  const expressionTokens: string[] = [];
 
   for (const card of cards) {
     if (card.type === CardType.NUMBER) {
@@ -191,7 +190,6 @@ export const buildExpressionString = (cards: Card[]): string => {
         }
       }
     }
-    prevCard = card;
   }
   return expressionTokens.join('').trim();
 };
