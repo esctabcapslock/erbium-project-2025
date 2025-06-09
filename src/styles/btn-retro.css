@@ -1,0 +1,102 @@
+/* src/styles/btn-retro.css */
+
+@layer components {
+  /* Retro Primary Button (Pure HTML-like) */
+  .btn-retro-primary {
+    @apply relative inline-flex items-center justify-center
+           px-6 py-2 rounded-none font-bold text-base whitespace-nowrap
+           border border-solid transition-colors duration-100 ease-in-out
+           focus:outline-none focus:ring-2 focus:ring-offset-2;
+    /* Basic, solid border and background for pure HTML feel */
+    border-color: #333; /* Darker border for contrast */
+    background-color: #f0f0f0; /* Light gray background */
+    color: #333; /* Dark text */
+
+    /* Hover State */
+    &:hover {
+      background-color: #e0e0e0;
+      border-color: #1a1a1a;
+      color: #1a1a1a;
+    }
+
+    /* Active State (Button pressed) */
+    &:active {
+      background-color: #d0d0d0;
+      border-color: #000;
+      color: #000;
+      transform: translateY(1px); /* Slight shift down when pressed */
+    }
+
+    /* Focus Ring */
+    &:focus-visible { /* Ensures focus ring is only visible on keyboard navigation */
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.5); /* Simple blue focus ring */
+    }
+  }
+
+  /* Retro Secondary Button (Pure HTML-like, e.g., Reset/Back) */
+  .btn-retro-secondary {
+    @apply relative inline-flex items-center justify-center
+           px-6 py-2 rounded-none font-bold text-base whitespace-nowrap
+           border border-solid transition-colors duration-100 ease-in-out
+           focus:outline-none focus:ring-2 focus:ring-offset-2;
+    /* Basic, solid border and background for pure HTML feel */
+    border-color: #666; /* Slightly lighter border */
+    background-color: #e8e8e8; /* Lighter gray background */
+    color: #444; /* Slightly lighter text */
+
+    /* Hover State */
+    &:hover {
+      background-color: #d8d8d8;
+      border-color: #444;
+      color: #222;
+    }
+
+    /* Active State (Button pressed) */
+    &:active {
+      background-color: #c8c8c8;
+      border-color: #000;
+      color: #000;
+      transform: translateY(1px); /* Slight shift down when pressed */
+    }
+
+    /* Focus Ring */
+    &:focus-visible {
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(108, 117, 125, 0.5); /* Gray focus ring */
+    }
+  }
+
+  /* Retro Tertiary Button (Pure HTML-like, e.g., Text-based actions) */
+  .btn-retro-tertiary {
+    @apply relative inline-flex items-center justify-center
+           px-4 py-2 rounded-none font-bold text-sm whitespace-nowrap
+           border border-solid transition-colors duration-100 ease-in-out
+           focus:outline-none focus:ring-2 focus:ring-offset-2;
+    /* Basic, solid border and transparent background */
+    border-color: #ccc; /* 옅은 테두리 추가 */
+    background-color: #f7f7f7; /* 옅은 배경색 추가 */
+    color: #555; /* Mid-gray text */
+
+    /* Hover State */
+    &:hover {
+      background-color: #eee; /* 호버 시 약간 더 진해짐 */
+      border-color: #bbb; /* 호버 시 테두리 약간 진해짐 */
+      color: #222;
+    }
+
+    /* Active State (Button pressed) */
+    &:active {
+      background-color: #ddd; /* 클릭 시 더 진해짐 */
+      border-color: #999;
+      color: #000;
+      transform: translateY(1px); /* Slight shift down when pressed */
+    }
+
+    /* Focus Ring */
+    &:focus-visible {
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(150, 150, 150, 0.5); /* Light gray focus ring */
+    }
+  }
+}

@@ -1,0 +1,117 @@
+/* src/styles/globals.css */
+@import "tailwindcss";
+@import "./btn-retro.css";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Global Styles: Clean, Minimalist Theme */
+body {
+  @apply bg-white text-gray-800 font-sans leading-relaxed flex items-center justify-center min-h-screen p-4; /* 배경 그라데이션 제거, 흰색 배경, 중앙 정렬 */
+}
+
+/* Base Container/Panel Styles */
+.panel {
+  @apply bg-white p-6 rounded-lg shadow-sm border border-gray-200; /* Subtle shadow, light border */
+}
+
+
+
+
+/* --- Card Styles (Unchanged from previous versions) --- */
+.card-base {
+  @apply w-20 h-24 flex flex-col items-center justify-center rounded-md border border-gray-300 text-lg font-semibold select-none
+         transition-transform duration-150 ease-in-out p-1;
+}
+
+/* Card Type-specific Colors */
+.card-number {
+  @apply bg-blue-50 text-blue-800 border-blue-200;
+}
+.card-operator {
+  @apply bg-green-50 text-green-800 border-green-200;
+}
+.card-parenthesis {
+  @apply bg-purple-50 text-purple-800 border-purple-200;
+}
+
+/* Card States */
+.card-active {
+  @apply cursor-pointer;
+}
+.card-active:hover {
+  @apply scale-105 shadow-md;
+}
+.card-active:active {
+  @apply scale-95;
+}
+
+.card-disabled {
+  @apply opacity-60 cursor-not-allowed;
+}
+
+/* Card Label and Value */
+.card-label {
+  @apply text-xl;
+}
+.card-value {
+  @apply text-sm text-gray-600 mt-1;
+}
+
+/* Card Display Zones (Inventory, Expression) */
+.card-zone {
+  @apply bg-gray-100 border border-gray-200 rounded-md min-h-[100px] p-4 flex flex-wrap items-center justify-center gap-2;
+}
+
+/* Inventory Grid Specific */
+.inventory-grid {
+  @apply grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-3 p-3 overflow-y-auto max-h-[300px];
+}
+
+/* Utility for screen reader only */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* --- Animations --- */
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out forwards;
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.animate-slide-in-up {
+  animation: slideInUp 0.5s ease-out forwards;
+}
+@keyframes slideInUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in-down {
+  animation: fadeInDown 0.4s ease-out forwards;
+}
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-pulse-once {
+  animation: pulseOnce 1.5s ease-in-out 1;
+}
+
+@keyframes pulseOnce {
+  0% { transform: scale(1); box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
+  50% { transform: scale(1.03); box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2); }
+  100% { transform: scale(1); box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
+}
