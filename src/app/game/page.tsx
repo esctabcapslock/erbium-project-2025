@@ -5,7 +5,7 @@ import React, { useState, useEffect } from 'react';
 import { useGameStore } from '@/store/gameStore';
 import { stages } from '@/lib/constants';
 import { Card as CardType } from '@/lib/types';
-import { evaluateExpression, isValidExpression, buildExpressionString } from '@/lib/gameLogic';
+import { evaluateExpression, isValidExpression, buildExpressionString, calculateCurrentCardCount } from '@/lib/gameLogic';
 import Inventory from '@/components/Inventory';
 import Card from '@/components/Card';
 import Link from 'next/link';
@@ -107,6 +107,9 @@ const GamePage: React.FC = () => {
     }
   };
 
+  const currentCardCount = calculateCurrentCardCount(currentExpression);
+
+
   if (!currentStage) {
     return (
       <div className="container mx-auto p-8 text-center panel mt-10 animate-fade-in">
@@ -139,7 +142,7 @@ const GamePage: React.FC = () => {
       return;
     }
 
-    if (currentExpression.length < currentStage.cardLimit) {
+    if (currentCardCount < currentStage.cardLimit) {
       selectCardForExpression(card);
       setShowTooltip(false);
     } else {
@@ -252,7 +255,7 @@ const GamePage: React.FC = () => {
             목표 숫자: {currentStage.targetNumber}
           </div>
           <p className="text-sm text-gray-600 text-center">
-            카드 사용: <span className="font-semibold text-blue-600">{currentExpression.length}</span> / {currentStage.cardLimit}
+            카드 사용: <span className="font-semibold text-blue-600">{currentCardCount}</span> / {currentStage.cardLimit}
           </p>
         </div>
 
@@ -262,7 +265,7 @@ const GamePage: React.FC = () => {
       <div className="mt-6 panel animate-slide-in-up">
         <h3 className="text-2xl font-bold mb-3 text-gray-800 text-center">나의 수식</h3>
         <div className="card-zone">
-          {currentExpression.length === 0 ? (
+          {currentCardCount === 0 ? (
             <p className="text-gray-500 text-base">인벤토리에서 카드를 선택하여 수식을 만들어보세요.</p>
           ) : (
             currentExpression.map((card, index) => (
@@ -274,7 +277,7 @@ const GamePage: React.FC = () => {
           <button
             onClick={handleCheckAnswer}
             className="btn-retro-primary"
-            disabled={currentExpression.length === 0}
+            disabled={currentCardCount === 0}
           >
             정답 확인
           </button>

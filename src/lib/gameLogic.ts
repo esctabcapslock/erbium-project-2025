@@ -265,6 +265,20 @@ export const isValidExpression = (cards: Card[]): boolean => {
  */
 export const evaluateExpression = (cards: Card[]): number => {
   // 단일 숫자 카드 처리 (Shunting-yard algorithm이 단일 숫자를 처리할 수 있으므로 특별한 분기 불필요)
+
   const rpn = toRPN(cards);
   return evaluateRPN(rpn);
+};
+
+
+export const calculateCurrentCardCount = (expressionCards: Card[]): number => {
+  let count = 0;
+  expressionCards.forEach(card => {
+    if (card.type === CardType.PARENTHESIS) {
+      count += 0.5; // 괄호는 0.5장으로 계산
+    } else {
+      count += 1; // 다른 카드는 1장으로 계산
+    }
+  });
+  return count;
 };

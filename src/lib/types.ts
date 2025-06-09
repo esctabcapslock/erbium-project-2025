@@ -2,7 +2,7 @@ export enum CardType {
     NUMBER = 'number',
     OPERATOR = 'operator',
     PARENTHESIS = 'parenthesis',
-    POWER = 'power',
+    // POWER = 'power',
   }
   
   export interface Card {
@@ -13,6 +13,7 @@ export enum CardType {
     initialCost: number; // 카드의 초기 구매 비용
     currentCost: number; // 현재 구매 비용 (변동 가능)
     allowMultiple?: boolean; // 6, 8과 같이 여러 개 가질 수 있는 카드 (현재 사용 안 함)
+    description?: string
   }
   
   export interface Stage {
