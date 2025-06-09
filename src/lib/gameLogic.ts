@@ -8,7 +8,7 @@ const OPERATORS: { [key: string]: { precedence: number; associativity: 'left' | 
   'x': { precedence: 3, associativity: 'left', arity: 2 },
   '÷': { precedence: 3, associativity: 'left', arity: 2 },
   '%': { precedence: 3, associativity: 'left', arity: 2 }, // 나머지
-  '^': { precedence: 4, associativity: 'right', arity: 2 }, // 거듭제곱은 우측 결합성
+  '**': { precedence: 4, associativity: 'right', arity: 2 }, // 거듭제곱은 우측 결합성
   '!': { precedence: 5, associativity: 'right', arity: 1 }, // 팩토리얼 (단항 연산자)
   'abs': { precedence: 5, associativity: 'right', arity: 1 }, // 절댓값 (단항 연산자)
   'round': { precedence: 5, associativity: 'right', arity: 1 }, // 반올림 (단항 연산자)
@@ -115,7 +115,7 @@ export const evaluateRPN = (rpnExpression: Card[]): number => {
             if (b === 0) throw new Error('0으로 나눌 수 없습니다 (나머지 연산).');
             result = a % b;
             break;
-          case '^': result = Math.pow(a, b); break;
+          case '**': result = Math.pow(a, b); break;
           default: throw new Error(`알 수 없는 이항 연산자: ${token.label}`);
         }
         stack.push(result);
@@ -202,13 +202,16 @@ export const buildExpressionString = (cards: Card[]): string => {
  */
 export const isValidExpression = (cards: Card[]): boolean => {
   if (cards.length === 0) return false;
-  if (cards.length === 1 && cards[0].type === CardType.NUMBER) return true; // 단일 숫자는 항상 유효
+  if (cards.length === 1 && cards[0].type === CardType.NUMBER) return true;
 
   let openParenCount = 0;
   for (let i = 0; i < cards.length; i++) {
     const card = cards[i];
     const prevCard = i > 0 ? cards[i - 1] : null;
     const nextCard = i < cards.length - 1 ? cards[i + 1] : null;
+
+
+    console.log('-isValidExpression-',card)
 
     if (card.label === '(') {
       openParenCount++;
@@ -218,8 +221,8 @@ export const isValidExpression = (cards: Card[]): boolean => {
       }
     } else if (card.label === ')') {
       openParenCount--;
-      if (openParenCount < 0) return false; // 닫는 괄호가 먼저 나옴
-      // ) 다음에 숫자나 여는 괄호가 오는 경우 방지 (예: (5)6, (5)(6))
+      if (openParenCount < 0) return false;
+      // ) 다음에 숫자나 여는 괄호, 또는 특정 함수 형태의 단항 연산자가 오는 경우 방지 (예: (5)6, (5)(6), (5)abs)
       if (nextCard && (nextCard.type === CardType.NUMBER || nextCard.label === '(' || ['abs', 'round', 'floor', 'ceil', '!'].includes(nextCard.label))) {
           return false;
       }
@@ -229,30 +232,29 @@ export const isValidExpression = (cards: Card[]): boolean => {
         return false;
       }
     } else if (card.type === CardType.OPERATOR) {
-        const isUnary = ['!', 'abs', 'round', 'floor', 'ceil'].includes(card.label);
-        // 연산자 뒤에 닫는 괄호나 다른 연산자가 오는 경우 방지 (단, 특정 경우 예외)
-        if (nextCard && (nextCard.type === CardType.OPERATOR && !isUnary || nextCard.label === ')')) {
-            // 이항 연산자 뒤에 바로 단항 연산자가 올 수 없음 (예: 5 + !)
-            if (!isUnary && nextCard.type === CardType.OPERATOR && ['!', 'abs', 'round', 'floor', 'ceil'].includes(nextCard.label)) {
-                return false;
-            }
-        }
-        // 이항 연산자
-        if (!isUnary) {
+        const isUnaryFunction = ['abs', 'round', 'floor', 'ceil'].includes(card.label); // abs, round 등
+        const isFactorial = card.label === '!'; // 팩토리얼
+
+        // 이항 연산자 ( +, -, *, /, % )
+        if (!isUnaryFunction && !isFactorial) {
             // 이항 연산자 앞에 아무것도 없거나 연산자가 오는 경우 (단, ( 다음에 오는 +,-는 허용)
-            if (!prevCard || (prevCard.type === CardType.OPERATOR && !['(', ')'].includes(prevCard.label) && !(['+', '-'].includes(card.label) && prevCard.label === '('))) {
+            if (!prevCard || (prevCard.type === CardType.OPERATOR && !['(', ')','!'].includes(prevCard.label) && !(['+', '-'].includes(card.label) && prevCard.label === '('))) {
                 return false;
             }
-            // 이항 연산자 뒤에 아무것도 없거나 닫는 괄호가 오는 경우
-            if (!nextCard || (nextCard.type === CardType.OPERATOR && !['(', ')'].includes(nextCard.label))) {
+            // 이항 연산자 뒤에 아무것도 없거나 닫는 괄호가 오는 경우 (단, 다음이 단항 연산자나 여는 괄호, 숫자여야 함)
+            if (!nextCard || nextCard.label === ')' || (nextCard.type === CardType.OPERATOR && !['(', ')'].includes(nextCard.label) && !['abs', 'round', 'floor', 'ceil', '+', '-'].includes(nextCard.label))) {
                  return false;
             }
-        } else { // 단항 연산자 (!, abs, round 등)
-            if (card.label === '!') { // 팩토리얼은 숫자나 닫는 괄호 뒤에만 올 수 있음
-                if (!prevCard || (prevCard.type !== CardType.NUMBER && prevCard.label !== ')')) return false;
-            } else { // abs, round 등은 숫자 앞에 오거나 (숫자) 앞에 올 수 있음
-                if (!nextCard || (nextCard.type !== CardType.NUMBER && nextCard.label !== '(')) return false;
+        } else if (isFactorial) { // 팩토리얼 (!)
+            // 팩토리얼은 숫자나 닫는 괄호 뒤에만 올 수 있음
+            if (!prevCard || (prevCard.type !== CardType.NUMBER && prevCard.label !== ')')) {console.log('2'); return false;}
+            // 팩토리얼 뒤에 숫자나 여는 괄호, 함수 형태의 단항 연산자가 오는 경우 방지 (예: 5!6, 5!(, 5!abs)
+            if (nextCard && (nextCard.type === CardType.NUMBER || nextCard.label === '(' || ['abs', 'round', 'floor', 'ceil'].includes(nextCard.label))) {
+                console.log('3'); return false;
             }
+        } else { // 함수 형태의 단항 연산자 (abs, round 등)
+            // 함수 형태의 단항 연산자는 숫자나 여는 괄호 앞에 올 수 있음
+            if (!nextCard || (nextCard.type !== CardType.NUMBER && nextCard.label !== '(')) {console.log('4'); return false;}
         }
     }
   }
@@ -281,4 +283,48 @@ export const calculateCurrentCardCount = (expressionCards: Card[]): number => {
     }
   });
   return count;
+};
+
+/**
+ * 연속된 숫자 카드들을 하나의 다중 자릿수 숫자로 병합합니다.
+ * 예: [6, 6, 8, '+', 1] -> [668, '+', 1]
+ * @param expression 원본 수식 카드 배열
+ * @returns 병합된 수식 카드 배열 (계산용)
+ */
+export const processConsecutiveNumbers = (expression: Card[]): Card[] => {
+  const processedExpression: Card[] = [];
+  let i = 0;
+
+  while (i < expression.length) {
+    const currentCard = expression[i];
+
+    if (currentCard.type === 'number') {
+      let consecutiveNumberString = String(currentCard.value);
+      let j = i + 1;
+
+      // 다음 카드도 숫자 카드이면 계속 병합
+      while (j < expression.length && expression[j].type === 'number') {
+        consecutiveNumberString += String(expression[j].value);
+        j++;
+      }
+
+      // 병합된 숫자 카드를 새로운 Card 객체로 생성
+      const mergedValue = parseInt(consecutiveNumberString, 10);
+      processedExpression.push({
+        id: `merged_num_${Date.now()}_${Math.random()}`, // 고유 ID 부여
+        label: consecutiveNumberString, // UI 표시용 label
+        type: CardType.NUMBER,
+        value: mergedValue, // 실제 계산에 사용될 값
+        initialCost: 0,
+        purchaseCount: 0,
+        currentCost: 0, // 계산용이므로 비용은 0
+      });
+      i = j; // 다음 처리 시작 인덱스 업데이트
+    } else {
+      // 숫자 카드가 아니면 그대로 추가
+      processedExpression.push(currentCard);
+      i++;
+    }
+  }
+  return processedExpression;
 };

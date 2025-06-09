@@ -67,7 +67,8 @@ export const useGameStore = create<GameState & GameActions>()(
           }];
           const newShopCards = state.shopCards.map(card => {
             if (card.id === cardId) {
-              return { ...card, currentCost: Math.round(card.currentCost + Math.max(card.initialCost || 0, 1)) }; // initialCost가 없을 경우 0으로 처리
+              card.purchaseCount++
+              return { ...card, currentCost: Math.round(card.initialCost*Math.pow(2, card.purchaseCount)) }; // initialCost가 없을 경우 0으로 처리
             }
             return card;
           });

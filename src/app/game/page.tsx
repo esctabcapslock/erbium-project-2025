@@ -5,7 +5,7 @@ import React, { useState, useEffect } from 'react';
 import { useGameStore } from '@/store/gameStore';
 import { stages } from '@/lib/constants';
 import { Card as CardType } from '@/lib/types';
-import { evaluateExpression, isValidExpression, buildExpressionString, calculateCurrentCardCount } from '@/lib/gameLogic';
+import { evaluateExpression, isValidExpression, buildExpressionString, calculateCurrentCardCount, processConsecutiveNumbers } from '@/lib/gameLogic';
 import Inventory from '@/components/Inventory';
 import Card from '@/components/Card';
 import Link from 'next/link';
@@ -151,14 +151,16 @@ const GamePage: React.FC = () => {
   };
 
   const handleCheckAnswer = () => {
-    if (!isValidExpression(currentExpression)) {
+
+    const processExpression = processConsecutiveNumbers(currentExpression)
+    if (!isValidExpression(processExpression)) {
       showTemporaryTooltip('수식이 올바르지 않아요. 다시 확인해 보세요!');
       return;
     }
 
     let result: number | null = null;
     try {
-      result = evaluateExpression(currentExpression);
+      result = evaluateExpression(processExpression);
     } catch (e: unknown) {
       if (e instanceof Error) {
         showTemporaryTooltip(`계산 오류: ${e.message}`);
@@ -168,7 +170,7 @@ const GamePage: React.FC = () => {
       return;
     }
 
-    const expressionString = buildExpressionString(currentExpression);
+    const expressionString = buildExpressionString(processExpression);
     const timeTaken = Date.now() - currentStageStartTime;
     addTimeToTotal(timeTaken);
 
@@ -266,7 +268,7 @@ const GamePage: React.FC = () => {
         <h3 className="text-2xl font-bold mb-3 text-gray-800 text-center">나의 수식</h3>
         <div className="card-zone">
           {currentCardCount === 0 ? (
-            <p className="text-gray-500 text-base">인벤토리에서 카드를 선택하여 수식을 만들어보세요.</p>
+            <p className="text-gray-500 text-base">인벤토리에서 카드를 선택하여 수식을 만들어 보자.</p>
           ) : (
             currentExpression.map((card, index) => (
               <Card key={card.id + '_' + index} card={card} isClickable={false} />

@@ -38,8 +38,13 @@ const EndingPage: React.FC = () => {
           게임 클리어! 🎉
         </h1>
         <p className="text-xl md:text-2xl text-gray-700 mb-4">
-        끝내 숫자를 복구하는 데 성공했다! <br />
-        컴퓨터 세계의 평화를 지키는 데 성공했다.
+        불합리한 레벨 디자인, <br />
+        즉, 숫자 카드를 연이어서 낼 수 있다는 역발상에 성공했고,<br />
+        이는 컴퓨터에 치명적인 버그를 일으켰다. <br />
+        <br />
+        마침내, <br />
+        숫자를 복구하는 데 성공했다! <br />
+        컴퓨터 세계의 평화를 지켜낼 수 있었다.
         </p>
 
         <div className="my-8 space-y-3">

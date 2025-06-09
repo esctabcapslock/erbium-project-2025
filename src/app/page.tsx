@@ -40,7 +40,7 @@ const HomePage: React.FC = () => {
       {/* 저작권 정보 */}
       <footer className="mt-12 text-center text-gray-500 text-sm">
         <p>© 2025.06 {TEAM_NAME}. All rights reserved.</p>
-        <p className="mt-1">Powered by Next.js</p>
+        <p className="mt-1">Powered by Next.js 15 & Gemini 2.5 Flash</p>
       </footer>
     </div>
   );

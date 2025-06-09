@@ -41,7 +41,7 @@ const Inventory: React.FC<InventoryProps> = ({ cards, onCardSelect }) => {
       <h3 className="text-2xl font-bold text-gray-800 mb-3 text-center">인벤토리</h3>
       <div className="card-zone inventory-grid">
         {sortedCards.length === 0 ? (
-          <p className="text-gray-500 text-base col-span-full text-center">카드가 비었습니다. 상점에서 새 카드를 얻어보세요!</p>
+          <p className="text-gray-500 text-base col-span-full text-center">획득한 카드가 없다. 상점에서 카드를 획득할 수 있을 것 같다.</p>
         ) : (
           sortedCards.map((card) => (
             <Card key={card.id} card={card} isClickable={true} onCardClick={onCardSelect} />
